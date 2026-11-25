@@ -13,7 +13,7 @@ const char *greet(const char *name)
         name = "world";
 
     calls++;
-    snprintf(buffer, sizeof buffer, "Hello, %s!", name);
+    snprintf(buffer, sizeof buffer, "Welcome, %s!", name);
     return buffer;
 }
 
