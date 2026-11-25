@@ -4,3 +4,4 @@ hello
 tests/test_greet
 *.deb
 gmon.out
+/build/

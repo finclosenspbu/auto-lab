@@ -8,7 +8,7 @@
 # но пакет собирается без root.
 set -eu
 
-VERSION=1.0.0
+VERSION=1.1.0
 ARCH=amd64
 NAME=hello
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
