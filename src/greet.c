@@ -12,9 +12,9 @@ const char *greet(const char *name)
     if (name == NULL || name[0] == '\0')
         name = "world";
 
-    calls++;
-    snprintf(buffer, sizeof buffer, "Welcome, %s!", name);
-    return buffer;
+	calls++;
+	snprintf(buffer, sizeof buffer, "Hello, %s!", name);
+	return buffer;
 }
 
 int greet_calls(void)
