@@ -6,12 +6,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Наивная рекурсия: экспоненциальная сложность — главный «горячий» участок. */
+/* Итеративное вычисление чисел Фибоначчи. */
 static unsigned long fib(int n)
 {
     if (n < 2)
         return (unsigned long)n;
-    return fib(n - 1) + fib(n - 2);
+
+    unsigned long a = 0;
+    unsigned long b = 1;
+
+    for (int i = 2; i <= n; i++) {
+        unsigned long next = a + b;
+        a = b;
+        b = next;
+    }
+
+    return b;
 }
 
 /* Линейный проход: вызывается часто, но стоит дёшево. */
