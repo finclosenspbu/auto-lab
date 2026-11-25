@@ -4,7 +4,7 @@
 #
 #   ./ci.sh          # обычная сборка
 #   ./ci.sh clang    # другой компилятор (как matrix в Actions)
-set -eu
+set -e
 
 CC_ARG=${1:-gcc}
 ROOT=$(cd "$(dirname "$0")" && pwd)
