@@ -2,9 +2,9 @@
 # Именно эти цели вызывают CI и упаковщик пакета.
 
 CC      = gcc
-CFLAGS  = -std=c11 -Wall -Wextra -O2 -g -Iinclude
+CFLAGS  = -std=c11 -Wall -Wextra -O2 -g -Iinclude -DVERSION=\"$(VERSION)\"
 PREFIX  = /usr/local
-VERSION = 1.0.0
+VERSION = 1.1.0
 
 BIN  = hello
 OBJS = src/main.o src/greet.o
