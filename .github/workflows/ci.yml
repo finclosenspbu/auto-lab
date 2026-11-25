@@ -1,0 +1,35 @@
+# Сборка, тест и пакет на каждый push.
+# Ровно те же шаги выполняет локальный ci.sh — его можно запустить без GitHub.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cc: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Показать компилятор
+        run: ${{ matrix.cc }} --version
+
+      - name: Сборка
+        run: make CC=${{ matrix.cc }}
+
+      - name: Тесты
+        run: make test CC=${{ matrix.cc }}
+
+      - name: Пакет
+        run: ./packaging/build-deb.sh
+
+      - name: Сохранить артефакт
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ matrix.cc }}
+          path: dist/*.deb

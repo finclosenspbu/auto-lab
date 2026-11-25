@@ -1,0 +1,10 @@
+Package: hello
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: СПбГУ, кафедра технологии программирования <student@spbu.ru>
+Depends: libc6 (>= 2.34)
+Description: учебная утилита приветствия
+ Печатает приветствие для имени, переданного в аргументе.
+ Пример пакета для практикума по автоматической сборке.
