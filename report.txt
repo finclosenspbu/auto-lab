@@ -1,0 +1,131 @@
+Домашнее задание по теме «Автоматизация сборки»
+
+1. Работа с Git
+
+Я создал ветку feature/version, добавил поддержку
+аргумента --version и обновил версию программы до 1.1.0.
+После проверки объединил ветку с main.
+Также создал тег v1.1.0.
+
+История коммитов:
+* 9049579 Оптимизировал функцию fib и сохранил результаты gprof
+*   64f18c4 Слияние ветки feature/version
+|\  
+| * 56b8be0 Исключил временные файлы сборки
+| * 90bbdc4 Обновил CI и сборку deb-пакета
+| * 11cdb9b Добавил поддержку --version и обновил версию до 1.1.0
+|/  
+*   666a90b разрешил конфликт слияния
+|\  
+| * ec5b700 изменил приветствие в feature
+* | 9a964f1 изменил приветствие в main
+|/  
+*   2499e3d слияние тестов
+|\  
+| * 6974aa2 добавил тесты greet
+|/  
+* 6eee6d9 модуль greet
+* 1de80c7 скелет проекта
+
+2. Автоматизация сборки
+Я запустил ci.sh. Сборка и все тесты прошли успешно.
+=== компилятор: gcc ===
+gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+=== чистая сборка ===
+rm -f hello src/*.o tests/test_greet
+gcc -std=c11 -Wall -Wextra -O2 -g -Iinclude -DVERSION=\"1.1.0\" -c src/main.c -o src/main.o
+gcc -std=c11 -Wall -Wextra -O2 -g -Iinclude -DVERSION=\"1.1.0\" -c src/greet.c -o src/greet.o
+gcc -o hello src/main.o src/greet.o
+=== тесты ===
+gcc -std=c11 -Wall -Wextra -O2 -g -Iinclude -DVERSION=\"1.1.0\" -o tests/test_greet tests/test_greet.c src/greet.o
+./tests/test_greet
+ok:   обычное имя
+ok:   NULL заменяется на world
+ok:   пустая строка заменяется
+ok:   счётчик вызовов
+
+все проверки прошли
+=== пакет ===
+собираю пакет…
+dpkg-deb: building package 'hello' in 'dist/hello_1.1.0_amd64.deb'.
+=== готово ===
+dist/hello_1.1.0_amd64.deb
+
+3. Создание deb-пакета
+Я собрал пакет версии 1.1.0 с зависимостью от libc6.
+drwxr-xr-x root/root         0 2026-11-25 15:13 ./
+drwxr-xr-x root/root         0 2026-11-25 15:13 ./usr/
+drwxr-xr-x root/root         0 2026-11-25 15:13 ./usr/bin/
+-rwxr-xr-x root/root     19840 2026-11-25 15:13 ./usr/bin/hello
+ new Debian package, version 2.0.
+ size 4576 bytes: control archive=454 bytes.
+     503 bytes,    10 lines      control
+ Package: hello
+ Version: 1.1.0
+ Section: utils
+ Priority: optional
+ Architecture: amd64
+ Maintainer: СПбГУ, кафедра технологии программирования <student@spbu.ru>
+ Depends: libc6 (>= 2.34)
+ Description: учебная утилита приветствия
+  Печатает приветствие для имени, переданного в аргументе.
+  Пример пакета для практикума по автоматической сборке.
+
+4. Профилирование программы
+Результаты до оптимизации:
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+100.00      0.06     0.06        1    60.00    60.00  fib
+
+			Call graph
+
+
+granularity: each sample hit covers 4 byte(s) for 16.67% of 0.06 seconds
+
+index % time    self  children    called     name
+                             15538219             fib [1]
+                0.06    0.00       1/1           main [2]
+[1]    100.0    0.06    0.00       1+15538219 fib [1]
+                             15538219             fib [1]
+-----------------------------------------------
+                                                 <spontaneous>
+[2]    100.0    0.00    0.06                 main [2]
+                0.06    0.00       1/1           fib [1]
+-----------------------------------------------
+
+Index by function name
+
+   [1] fib
+
+Результаты после оптимизации:
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+ no time accumulated
+
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  Ts/call  Ts/call  name    
+
+При помощи gprof я определил, что больше всего
+времени занимала функция fib.
+Я заменил рекурсию обычным циклом.
+
+Время до оптимизации: 0.198 секунды.
+Время после оптимизации: 0.001 секунды.
+По одиночным замерам ускорение составило примерно 198 раз.
+Точное ускорение требует повторных замеров.
+Результаты вычислений остались такими же.
+
+5. Что было непонятно
+
+Сначала я не совсем понимал, как передать версию
+из Makefile в программу. Также возникли проблемы
+с правами запуска скриптов и компиляцией hot.c.
+После исправления ошибок всё заработало.
+
+В ходе выполнения домашнего задания я научился
+работать с ветками Git, автоматизировать сборку,
+создавать deb-пакеты и пользоваться gprof.
